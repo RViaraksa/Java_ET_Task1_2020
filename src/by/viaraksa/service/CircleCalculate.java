@@ -3,15 +3,15 @@ package by.viaraksa.service;
 import by.viaraksa.bean.Circle;
 
 public class CircleCalculate {
-    public double calculateSquare(Circle circle){
+    public static double calculateSquare(Circle circle){
         return (Math.PI * circle.getRadius() * circle.getRadius());
     }
 
-    public double calclculatePerimetr(Circle circle){
+    public static double calclculatePerimetr(Circle circle){
         return (2 * Math.PI * circle.getRadius());
     }
 
-    boolean croseOnlyAxis(Circle circle, double length){
+    public static boolean croseOnlyAxis(Circle circle, double length){
         boolean result;
         if(circle.getRadius() - Math.abs(circle.getDot().getX()) <= 0){
             return (2 * Math.sqrt(square(circle.getRadius()) - square(circle.getDot().getY()))) == length;
@@ -22,7 +22,7 @@ public class CircleCalculate {
         else return false;
     }
 
-    private double square(double a){
+    private static double square(double a){
         return a*a;
     }
 

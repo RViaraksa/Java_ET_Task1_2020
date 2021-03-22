@@ -17,11 +17,15 @@ public class ScannerCircle {
     public List<Circle> scanFile() throws FileNotFoundException {
         circles = new ArrayList<>();
         Scanner scanner = new Scanner(new File("src/resources/info.txt"));
-        scanner.useDelimiter("((;\\s)|(\n))");
+        scanner.useDelimiter("((;\\s)|(\n)|(\\s{2,}))");                                    //регулярка отслеживает ; новую строку и 2 и более пробела, при этом метод принимает это за разжелитель
         while (scanner.hasNext()){
             List<Double> doubles = getNumber(scanner.next());
             circles.add(new Circle(new Dot(doubles.get(1),doubles.get(2)), doubles.get(0)));
         }
+        return circles;
+    }
+
+    public List<Circle> getCircles() {
         return circles;
     }
 
