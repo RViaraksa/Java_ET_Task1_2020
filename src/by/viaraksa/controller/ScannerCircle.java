@@ -3,24 +3,49 @@ package by.viaraksa.controller;
 import by.viaraksa.bean.Circle;
 import by.viaraksa.bean.Dot;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ScannerCircle {
     private List<Circle> circles;
 
+
     public List<Circle> scanFile() throws FileNotFoundException {
         circles = new ArrayList<>();
-        Scanner scanner = new Scanner(new File("src/resources/info.txt"));
-        scanner.useDelimiter("((;\\s)|(\n)|(\\s{2,}))");                                    //регулярка отслеживает ; новую строку и 2 и более пробела, при этом метод принимает это за разжелитель
-        while (scanner.hasNext()){
-            List<Double> doubles = getNumber(scanner.next());
-            circles.add(new Circle(new Dot(doubles.get(1),doubles.get(2)), doubles.get(0)));
+        File file = new File("src/resources/info.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        Pattern pattern = Pattern.compile(
+                "([-*|\\d]+[.|,][-*|\\d]+[\\s]){2}(([-*|\\d]+[.|,][-*|\\d]+))");
+
+        List<String> string = reader.lines().collect(Collectors.toList());
+
+        for (String line : string) {
+            Matcher matcher = pattern.matcher(line);
+            while (matcher.find()) {
+                List<Double> doubles = getNumber(matcher.group());
+                circles.add(new Circle(new Dot(doubles.get(1), doubles.get(2)), doubles.get(0)));
+            }
+
+        /*reader.lines()
+                .map(pattern::matcher)
+                //не работает т.к. метод find ищет первое совпадение
+                //и переходит к следующему шагу, при этом
+                //другие совпланеия в этой строке терются
+                //если как то сделать это в виде:
+                //while(matcher.find) то все заработает
+                .peek(Matcher:: find)
+                .map(matcher -> matcher.group())
+                .collect(Collectors.toList())
+                .forEach(System.out::println);*/
+
+
+
         }
         return circles;
     }
