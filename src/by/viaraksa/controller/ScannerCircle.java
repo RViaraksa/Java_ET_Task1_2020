@@ -6,8 +6,6 @@ import by.viaraksa.bean.Dot;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -21,7 +19,7 @@ public class ScannerCircle {
         File file = new File("src/resources/info.txt");
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         Pattern pattern = Pattern.compile(
-                "([-*|\\d]+[.|,][-*|\\d]+[\\s]){2}(([-*|\\d]+[.|,][-*|\\d]+))");
+                "([-*|\\d]+([.|,]*)[-*|\\d]*[\\s]){2}(([-*|\\d]+([.|,]*)[-*|\\d]*))");
 
         List<String> string = reader.lines().collect(Collectors.toList());
 
