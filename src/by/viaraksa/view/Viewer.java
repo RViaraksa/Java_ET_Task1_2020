@@ -5,6 +5,7 @@ import by.viaraksa.controller.ScannerCircle;
 import by.viaraksa.service.CircleCalculate;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 public class Viewer {
@@ -31,7 +32,7 @@ public class Viewer {
                             ("круг {"+c.hashCode()+"} пересекает только одну ось на 5 ед? "+CircleCalculate.croseOnlyAxis(c, 2)));
 
 
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

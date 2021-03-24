@@ -4,6 +4,8 @@ import by.viaraksa.bean.Circle;
 import by.viaraksa.bean.Dot;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -14,17 +16,30 @@ public class ScannerCircle {
     private List<Circle> circles;
 
 
-    public List<Circle> scanFile() throws FileNotFoundException {
+    public List<Circle> scanFile() throws IOException {
         circles = new ArrayList<>();
-        File file = new File("src/resources/info.txt");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        Pattern pattern = Pattern.compile(
-                "([-*|\\d]+([.|,]*)[-*|\\d]*[\\s]){2}(([-*|\\d]+([.|,]*)[-*|\\d]*))");
+        try(RandomAccessFile file = new RandomAccessFile
+                ("C:\\Users\\PackardBell\\IdeaProjects\\Java_ET_Task1_2020\\src\\resources\\info.txt", "r")) {
+            ByteBuffer buffer = ByteBuffer.allocate(4096);
+            FileChannel channel = file.getChannel();
 
-        List<String> string = reader.lines().collect(Collectors.toList());
+            List<Character> characters = new ArrayList<>();
+            while ( channel.read(buffer) > 0){
+                buffer.flip();
+                while (buffer.hasRemaining()){
+                    characters.add((char) buffer.get());
+                }
+            }
 
-        for (String line : string) {
-            Matcher matcher = pattern.matcher(line);
+            String fileString = characters
+                    .stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining());
+
+            Pattern pattern = Pattern.compile(
+                    "([-*|\\d]+([.|,]*)[-*|\\d]*[\\s]){2}(([-*|\\d]+([.|,]*)[-*|\\d]*))");
+
+            Matcher matcher = pattern.matcher(fileString);
             while (matcher.find()) {
                 List<Double> doubles = getNumber(matcher.group());
                 circles.add(new Circle(new Dot(doubles.get(1), doubles.get(2)), doubles.get(0)));
